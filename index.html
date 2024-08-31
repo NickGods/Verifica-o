@@ -21,12 +21,24 @@
             }
         }
 
+        // Função para verificar se o IP está dentro do intervalo permitido
+        function isIPInRange(ip, range) {
+            const ipParts = ip.split('.').map(Number);
+            const [rangeStart, rangeEnd] = range.split('-').map(r => r.split('.').map(Number));
+            
+            const ipNum = ipParts[0] * 256 ** 3 + ipParts[1] * 256 ** 2 + ipParts[2] * 256 + ipParts[3];
+            const rangeStartNum = rangeStart[0] * 256 ** 3 + rangeStart[1] * 256 ** 2 + rangeStart[2] * 256 + rangeStart[3];
+            const rangeEndNum = rangeEnd[0] * 256 ** 3 + rangeEnd[1] * 256 ** 2 + rangeEnd[2] * 256 + rangeEnd[3];
+
+            return ipNum >= rangeStartNum && ipNum <= rangeEndNum;
+        }
+
         // Verifica o IP do usuário
         async function checkAccess() {
             const userIP = await getUserIP();
-            const allowedIP = '192.168.101.6'; // IP permitido
+            const allowedRange = '192.168.101.0-192.168.101.255'; // Faixa de IP permitida
 
-            if (userIP === allowedIP) {
+            if (userIP && isIPInRange(userIP, allowedRange)) {
                 window.location.href = 'https://forms.gle/2zRjS912gSFG5tVk9'; // Link do formulário
             } else {
                 document.body.innerHTML += '<p>Você não está na rede da escola. O acesso ao formulário foi bloqueado.</p>';
