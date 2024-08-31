@@ -31,10 +31,10 @@ Este projeto inclui um código HTML que verifica o IP do usuário para restringi
         // Verifica o IP do usuário
         async function checkAccess() {
             const userIP = await getUserIP();
-            const allowedIP = 'SEU_IP_ESCOLA_AQUI'; // Coloque o IP ou faixa de IP permitida
+            const allowedIP = '192.168.101.6'; // Coloque o IP ou faixa de IP permitida
 
             if (userIP === allowedIP) {
-                window.location.href = 'https://docs.google.com/forms/d/YOUR_FORM_ID/viewform'; // Substitua pelo link do seu formulário
+                window.location.href = 'https://forms.gle/2zRjS912gSFG5tVk9'; // Substitua pelo link do seu formulário
             } else {
                 document.body.innerHTML += '<p>Você não está na rede da escola. O acesso ao formulário foi bloqueado.</p>';
             }
