@@ -1,0 +1,2 @@
+console.log('IP do Usuário:', userIP);
+console.log('Está na Sub-rede?:', isIPInSubnet(userIP, allowedSubnet));
