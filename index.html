@@ -24,10 +24,10 @@
         // Verifica o IP do usuário
         async function checkAccess() {
             const userIP = await getUserIP();
-            const allowedIP = '192.168.101.6'; // Coloque o IP ou faixa de IP permitida
+            const allowedIP = '192.168.101.6'; // IP permitido
 
             if (userIP === allowedIP) {
-                window.location.href = 'https://forms.gle/2zRjS912gSFG5tVk9'; // Substitua pelo link do seu formulário
+                window.location.href = 'https://forms.gle/2zRjS912gSFG5tVk9'; // Link do formulário
             } else {
                 document.body.innerHTML += '<p>Você não está na rede da escola. O acesso ao formulário foi bloqueado.</p>';
             }
