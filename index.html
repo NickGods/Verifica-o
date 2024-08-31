@@ -31,7 +31,7 @@
             const [subnetIP, prefixLength] = subnet.split('/');
             const subnetNumber = ipToNumber(subnetIP);
             const ipNumber = ipToNumber(ip);
-            const mask = 0xFFFFFFFF << (32 - prefixLength);
+            const mask = 0xFFFFFFFF << (32 - parseInt(prefixLength));
             return (ipNumber & mask) === (subnetNumber & mask);
         }
 
