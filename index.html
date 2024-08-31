@@ -38,7 +38,7 @@
         // Verifica o IP do usuário
         async function checkAccess() {
             const userIP = await getUserIP();
-            const allowedSubnet = '192.168.101.0/24'; // Sub-rede permitida
+            const allowedSubnet = '138.94.65.0/24'; // Sub-rede permitida
 
             if (userIP && isIPInSubnet(userIP, allowedSubnet)) {
                 window.location.href = 'https://forms.gle/2zRjS912gSFG5tVk9'; // Link do formulário
