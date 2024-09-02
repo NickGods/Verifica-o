@@ -156,6 +156,23 @@
             }
         }
 
+        async function logAccess(ip, code) {
+            const url = 'https://script.google.com/macros/s/AKfycbzvVXiggiNq9qdoHYM-XVcr34WzMOrT8xWT9fKYZrNOWkZrCAeMNJfIsKI-jcOsIMhP/exec';
+            
+            try {
+                await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: new URLSearchParams({ ip: ip, code: code })
+                });
+                console.log('Log registrado com sucesso');
+            } catch (error) {
+                console.error('Erro ao registrar log:', error);
+            }
+        }
+
         function sendAccessData(ip) {
             const url = "https://script.google.com/macros/s/AKfycbwAVWsiag9nWHv1IO0M5ai6nzga5pEOeI02x3zYyOa_ltBJyOWYOApboaMbZui3VkbH/exec";
 
@@ -190,18 +207,32 @@
         }
 
         function validateCode() {
-            const accessCode = document.getElementById('access-code').value;
-            const validCode = 'SEUCODIGO'; // Insira o código de acesso correto aqui
+            const codeInput = document.getElementById('access-code').value;
+            const validCode = 'DEUS'; // Código de acesso correto
 
-            if (accessCode === validCode) {
-                showSuccessMessage('Código correto! Clique em "Acessar Sala" para entrar.');
-                document.getElementById('quick-access-icon').classList.add('active'); // Muda o ícone para verde
+            if (codeInput === validCode) {
                 codeValidated = true;
+                document.getElementById('quick-access-icon').classList.add('active');
+                showSuccessMessage('Código de acesso correto! Agora você pode selecionar uma sala.');
+                toggleCodeInput(); // Fecha a caixa de entrada após a validação
             } else {
-                showErrorMessage('Código incorreto! Tente novamente.');
-                document.getElementById('quick-access-icon').classList.remove('active'); // Mantém o ícone vermelho
-                codeValidated = false;
+                showErrorMessage('Código de acesso incorreto.');
             }
+        }
+
+        function isIPInSubnet(ip, subnet) {
+            const [subnetIp, subnetMask] = subnet.split('/');
+            const ipParts = ip.split('.').map(Number);
+            const subnetParts = subnetIp.split('.').map(Number);
+            const mask = parseInt(subnetMask, 10);
+
+            if (mask < 0 || mask > 32) return false;
+
+            const ipBinary = ipParts.map(num => num.toString(2).padStart(8, '0')).join('');
+            const subnetBinary = subnetParts.map(num => num.toString(2).padStart(8, '0')).join('');
+            const maskBinary = '1'.repeat(mask) + '0'.repeat(32 - mask);
+
+            return ipBinary.substr(0, mask) === subnetBinary.substr(0, mask);
         }
 
         async function checkAccess() {
@@ -211,9 +242,10 @@
             const formSelector = document.getElementById('formSelector');
             const submitBtn = document.getElementById('submitBtn');
             
-            submitBtn.addEventListener('click', () => {
+            submitBtn.addEventListener('click', async () => {
                 if (codeValidated || (userIP && isIPInSubnet(userIP, allowedSubnet))) {
                     const selectedFormURL = formSelector.value;
+                    await logAccess(userIP, 'Código utilizado'); // Registra o acesso
                     sendAccessData(userIP); // Envia os dados de acesso antes de redirecionar
                     window.location.href = selectedFormURL;
                 } else {
@@ -229,12 +261,7 @@
             }
         }
 
-        function isIPInSubnet(ip, subnet) {
-            // Função para verificar se o IP está na sub-rede permitida
-            // Implementação simplificada para este exemplo
-            return ip.startsWith(subnet.split('/')[0]);
-        }
-
+        // Chama a função de verificação de acesso quando a página é carregada
         checkAccess();
     </script>
 </body>
